@@ -18,6 +18,18 @@
         main {
             padding: 40px;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
@@ -26,13 +38,61 @@
     </header>
 
     <main>
-        <!-- Admin Panel Content -->
-        <!-- Add a table to display user data here -->
-        <p><a href="logout.php">Logout</a></p>
+        <div id="admin-content">
+            <!-- Admin Panel Content -->
+            <h2>User Information</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>IP Address</th>
+                        <th>City</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody id="user-info-body">
+                    <!-- User information will be displayed here -->
+                </tbody>
+            </table>
+            <p><a href="#" id="back-home">Back Home</a></p>
+        </div>
     </main>
 
     <footer>
         <p>&copy; IPtime</p>
     </footer>
+
+    <script>
+        // Function to fetch user information from localStorage and display it in the table
+        function displayUserInfo() {
+            var userInfoBody = document.getElementById('user-info-body');
+            // Clear existing content
+            userInfoBody.innerHTML = '';
+            // Retrieve user information from localStorage
+            var userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData) {
+                userData.forEach(function(user) {
+                    var row = document.createElement('tr');
+                    row.innerHTML = `<td>${user.username}</td>
+                                     <td>${user.password}</td>
+                                     <td>${user.ip}</td>
+                                     <td>${user.city}</td>
+                                     <td>${user.country}</td>`;
+                    userInfoBody.appendChild(row);
+                });
+            }
+        }
+
+        // Call the function to display user information when the page loads
+        displayUserInfo();
+
+        // Event listener for back home button
+        document.getElementById('back-home').addEventListener('click', function (e) {
+            e.preventDefault();
+            localStorage.removeItem('adminPassword');
+            window.location.href = 'index.html'; // Redirect to the main page
+        });
+    </script>
 </body>
 </html>
