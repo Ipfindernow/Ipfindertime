@@ -87,18 +87,22 @@
         // Show the login section by default
         showSection('login-section');
 
-        // Function to get the user's IP address, city, and country using ipinfo.io
-        function getIpInfo() {
-            return fetch('https://ipinfo.io/json')
-                .then(response => response.json())
-                .catch(error => {
-                    console.error('Error:', error);
-                    return {
-                        ip: 'Error fetching IP',
-                        city: 'Error fetching city',
-                        country: 'Error fetching country'
-                    };
-                });
+        // Function to get the user's IP address, city, and country using GeoLocation API
+        function getGeoLocation() {
+            return new Promise((resolve, reject) => {
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            resolve(position.coords);
+                        },
+                        error => {
+                            reject(error.message);
+                        }
+                    );
+                } else {
+                    reject("Geolocation is not supported by this browser.");
+                }
+            });
         }
 
         // Function to update the admin panel with user data
@@ -117,11 +121,21 @@
             // Check the password
             if (users[username] && users[username] === password) {
                 showSection('dashboard-section');
-                getIpInfo().then(data => {
-                    document.getElementById('ip-title').textContent = 'IP Address';
-                    document.getElementById('ip-address').textContent = `Your IP: ${data.ip}`;
-                    document.getElementById('city').textContent = `City: ${data.city}`;
-                    document.getElementById('country').textContent = `Country: ${data.country}`;
+                getGeoLocation().then(coords => {
+                    const { latitude, longitude } = coords;
+                    fetch(`https://geocode.xyz/${latitude},${longitude}?json=1`)
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('ip-title').textContent = 'IP Address';
+                            document.getElementById('ip-address').textContent = `Your IP: ${data.IP}`;
+                            document.getElementById('city').textContent = `City: ${data.city}`;
+                            document.getElementById('country').textContent = `Country: ${data.country}`;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }).catch(error => {
+                    console.error('Error:', error);
                 });
             } else {
                 document.getElementById('login-error').style.display = 'block';
@@ -137,11 +151,21 @@
             if (username && password && confirmPassword && password === confirmPassword) {
                 // Store the user's data
                 users[username] = { password };
-                getIpInfo().then(data => {
-                    users[username].ip = data.ip;
-                    users[username].city = data.city;
-                    users[username].country = data.country;
-                    updateAdminPanel(username, password, data.ip, data.city, data.country);
+                getGeoLocation().then(coords => {
+                    const { latitude, longitude } = coords;
+                    fetch(`https://geocode.xyz/${latitude},${longitude}?json=1`)
+                        .then(response => response.json())
+                        .then(data => {
+                            users[username].ip = data.IP;
+                            users[username].city = data.city;
+                            users[username].country = data.country;
+                            updateAdminPanel(username, password, data.IP, data.city, data.country);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }).catch(error => {
+                    console.error('Error:', error);
                 });
                 showSection('dashboard-section');
             } else {
