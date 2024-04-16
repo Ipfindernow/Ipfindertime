@@ -26,6 +26,9 @@
             padding: 8px;
             border-bottom: 1px solid #ddd;
         }
+        #back-button {
+            margin-top: 20px; /* Add some margin to create space */
+        }
     </style>
 </head>
 <body>
@@ -40,16 +43,13 @@
                 <tr>
                     <th>Username</th>
                     <th>Password</th>
-                    <th>IP Address</th>
-                    <th>City</th>
-                    <th>Country</th>
                 </tr>
             </thead>
             <tbody id="user-list">
                 <!-- User data will be dynamically added here -->
             </tbody>
         </table>
-        <button id="back-button">Back to Main Page</button>
+        <button id="back-button">Back to Main Page</button> <!-- Move the button here -->
     </main>
 
     <footer>
@@ -67,9 +67,6 @@
                     row.innerHTML = `
                         <td>${username}</td>
                         <td>${userData.password}</td>
-                        <td>${userData.ip}</td>
-                        <td>${userData.city}</td>
-                        <td>${userData.country}</td>
                     `;
                     userList.appendChild(row);
                 });
