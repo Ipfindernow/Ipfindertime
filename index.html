@@ -58,7 +58,9 @@
             <p id="ip-address">Loading...</p>
             <p id="city">City: Loading...</p>
             <p id="country">Country: Loading...</p>
-            <button id="signout-button">Sign Out</button>
+            <button id="ip-button">Find IP</button>
+            <button id="admin-button">Admin Panel</button>
+            <button id="back-button">Back to Main Menu</button>
         </div>
     </main>
 
@@ -164,6 +166,31 @@
 
         // Event listener for the Sign Out button
         document.getElementById('signout-button').addEventListener('click', function () {
+            showSection('login-section'); // Redirect to the login section
+        });
+
+        // Event listener for the Find IP button
+        document.getElementById('ip-button').addEventListener('click', function () {
+            getIpInfo().then(data => {
+                document.getElementById('ip-title').textContent = 'IP Address';
+                document.getElementById('ip-address').textContent = `Your IP: ${data.ip}`;
+                document.getElementById('city').textContent = `City: ${data.city}`;
+                document.getElementById('country').textContent = `Country: ${data.country}`;
+            });
+        });
+
+        // Event listener for the Admin Panel button
+        document.getElementById('admin-button').addEventListener('click', function () {
+            const password = prompt('Enter admin password:');
+            if (password === '211892A') {
+                window.location.href = 'admin.html'; // Redirect to the admin panel
+            } else {
+                alert('Incorrect password!');
+            }
+        });
+
+        // Event listener for the Back to Main Menu button
+        document.getElementById('back-button').addEventListener('click', function () {
             showSection('login-section'); // Redirect to the login section
         });
     </script>
