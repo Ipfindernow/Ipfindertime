@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <style>
-        /* Add your CSS styles for the admin panel here */
+        /* Add your CSS styles for the admin page here */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -23,11 +23,8 @@
             border-collapse: collapse;
         }
         th, td {
-            border: 1px solid #ddd;
             padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
+            border-bottom: 1px solid #ddd;
         }
     </style>
 </head>
@@ -37,22 +34,22 @@
     </header>
 
     <main>
-        <h2>User Information</h2>
+        <h2>User List</h2>
         <table>
             <thead>
                 <tr>
                     <th>Username</th>
                     <th>Password</th>
-                    <th>IP</th>
+                    <th>IP Address</th>
                     <th>City</th>
                     <th>Country</th>
                 </tr>
             </thead>
             <tbody id="user-list">
-                <!-- User information will be dynamically added here -->
+                <!-- User data will be dynamically added here -->
             </tbody>
         </table>
-        <button id="back-home-button">Back to Home</button>
+        <button id="back-button">Back to Main Page</button>
     </main>
 
     <footer>
@@ -60,13 +57,12 @@
     </footer>
 
     <script>
-        // Function to fetch user data from localStorage and populate the admin panel
-        function populateAdminPanel() {
+        // Function to fetch user data from localStorage and display in the admin panel
+        function displayUserData() {
             const userList = document.getElementById('user-list');
-            const users = JSON.parse(localStorage.getItem('users'));
-            if (users) {
-                Object.keys(users).forEach(username => {
-                    const userData = users[username];
+            const usersData = JSON.parse(localStorage.getItem('users'));
+            if (usersData) {
+                Object.entries(usersData).forEach(([username, userData]) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${username}</td>
@@ -80,11 +76,11 @@
             }
         }
 
-        // Populate the admin panel on page load
-        populateAdminPanel();
+        // Display user data when the admin page loads
+        displayUserData();
 
-        // Event listener for the Back to Home button
-        document.getElementById('back-home-button').addEventListener('click', function () {
+        // Event listener for the Back button
+        document.getElementById('back-button').addEventListener('click', function () {
             window.location.href = 'index.html'; // Redirect to the main page
         });
     </script>
