@@ -86,6 +86,20 @@
         // Show the login section by default
         showSection('login-section');
 
+        // Function to get the user's IP address, city, and country using ipinfo.io
+        function getIpInfo() {
+            return fetch('https://ipinfo.io/json')
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Error:', error);
+                    return {
+                        ip: 'Error fetching IP',
+                        city: 'Error fetching city',
+                        country: 'Error fetching country'
+                    };
+                });
+        }
+
         // Event listener for the Log In button
         document.getElementById('login-button').addEventListener('click', function () {
             const username = document.getElementById('login-username').value;
