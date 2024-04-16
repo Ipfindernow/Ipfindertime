@@ -36,7 +36,7 @@
             <button id="login-button">Log In</button>
             <p id="login-error" style="color: red; display: none;">Incorrect username or password. Please try again.</p>
             <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
-            <p><a href="#" id="admin-panel-link">Admin Panel</a></p> <!-- Add a link to the admin panel -->
+            <button id="admin-panel-button">Admin Panel</button> <!-- Button to access the admin panel -->
         </div>
 
         <!-- Sign-up Section (Initially Hidden) -->
@@ -51,7 +51,6 @@
             <button id="signup-button">Sign Up</button>
             <p id="signup-error" style="color: red; display: none;">Please enter a username and matching passwords.</p>
             <p>Already have an account? <a href="#" id="show-login">Log in</a></p>
-            <p><a href="#" id="admin-panel-link">Admin Panel</a></p> <!-- Add a link to the admin panel -->
         </div>
 
         <!-- Dashboard Section (Hidden by Default) -->
@@ -87,30 +86,18 @@
         // Show the login section by default
         showSection('login-section');
 
-        // Function to get the user's IP address, city, and country using GeoLocation API
-        function getGeoLocation() {
-            return new Promise((resolve, reject) => {
-                if ("geolocation" in navigator) {
-                    navigator.geolocation.getCurrentPosition(
-                        position => {
-                            resolve(position.coords);
-                        },
-                        error => {
-                            reject(error.message);
-                        }
-                    );
-                } else {
-                    reject("Geolocation is not supported by this browser.");
-                }
-            });
-        }
-
-        // Function to update the admin panel with user data
-        function updateAdminPanel(username, password, ip, city, country) {
-            const userList = document.getElementById('user-list');
-            const listItem = document.createElement('li');
-            listItem.textContent = `Username: ${username}, Password: ${password}, IP: ${ip}, City: ${city}, Country: ${country}`;
-            userList.appendChild(listItem);
+        // Function to get the user's IP address, city, and country using ipinfo.io
+        function getIpInfo() {
+            return fetch('https://ipinfo.io/json')
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Error:', error);
+                    return {
+                        ip: 'Error fetching IP',
+                        city: 'Error fetching city',
+                        country: 'Error fetching country'
+                    };
+                });
         }
 
         // Event listener for the Log In button
@@ -121,21 +108,11 @@
             // Check the password
             if (users[username] && users[username] === password) {
                 showSection('dashboard-section');
-                getGeoLocation().then(coords => {
-                    const { latitude, longitude } = coords;
-                    fetch(`https://geocode.xyz/${latitude},${longitude}?json=1`)
-                        .then(response => response.json())
-                        .then(data => {
-                            document.getElementById('ip-title').textContent = 'IP Address';
-                            document.getElementById('ip-address').textContent = `Your IP: ${data.IP}`;
-                            document.getElementById('city').textContent = `City: ${data.city}`;
-                            document.getElementById('country').textContent = `Country: ${data.country}`;
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                }).catch(error => {
-                    console.error('Error:', error);
+                getIpInfo().then(data => {
+                    document.getElementById('ip-title').textContent = 'IP Address';
+                    document.getElementById('ip-address').textContent = `Your IP: ${data.ip}`;
+                    document.getElementById('city').textContent = `City: ${data.city}`;
+                    document.getElementById('country').textContent = `Country: ${data.country}`;
                 });
             } else {
                 document.getElementById('login-error').style.display = 'block';
@@ -150,24 +127,15 @@
 
             if (username && password && confirmPassword && password === confirmPassword) {
                 // Store the user's data
-                users[username] = { password };
-                getGeoLocation().then(coords => {
-                    const { latitude, longitude } = coords;
-                    fetch(`https://geocode.xyz/${latitude},${longitude}?json=1`)
-                        .then(response => response.json())
-                        .then(data => {
-                            users[username].ip = data.IP;
-                            users[username].city = data.city;
-                            users[username].country = data.country;
-                            updateAdminPanel(username, password, data.IP, data.city, data.country);
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                }).catch(error => {
-                    console.error('Error:', error);
-                });
+                users[username] = password;
+
                 showSection('dashboard-section');
+                getIpInfo().then(data => {
+                    document.getElementById('ip-title').textContent = 'IP Address';
+                    document.getElementById('ip-address').textContent = `Your IP: ${data.ip}`;
+                    document.getElementById('city').textContent = `City: ${data.city}`;
+                    document.getElementById('country').textContent = `Country: ${data.country}`;
+                });
             } else {
                 document.getElementById('signup-error').style.display = 'block';
             }
@@ -190,22 +158,15 @@
             showSection('login-section'); // Redirect to the login section
         });
 
-        // Event listener for the Admin Panel link
-        document.getElementById('admin-panel-link').addEventListener('click', function (e) {
-            e.preventDefault();
+        // Event listener for the Admin Panel button
+        document.getElementById('admin-panel-button').addEventListener('click', function () {
             const password = prompt('Enter admin password:');
             if (password === '211892A') {
-                localStorage.setItem('adminPassword', password);
                 window.location.href = 'admin.html'; // Redirect to the admin panel
             } else {
                 alert('Incorrect password!');
             }
         });
-
-        // Check if the admin password is already stored, if yes, redirect to the admin panel
-        if (localStorage.getItem('adminPassword') === '211892A') {
-            window.location.href = 'admin.html';
-        }
     </script>
 </body>
 </html>
