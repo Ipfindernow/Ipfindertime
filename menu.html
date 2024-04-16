@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Menu</title>
+    <style>
+        /* Add your CSS styles for the menu page here */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        header {
+            background-color: #666;
+            color: #fff;
+            padding: 50px;
+        }
+        main {
+            padding: 40px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Main Menu</h1>
+    </header>
+
+    <main>
+        <button id="login-page">Login Page</button>
+        <button id="signup-page">Sign Up Page</button>
+        <button id="dashboard-page">Dashboard Page</button>
+        <button id="admin-page">Admin Panel</button>
+    </main>
+
+    <footer>
+        <p>&copy; IPtime</p>
+    </footer>
+
+    <script>
+        // Event listener for the Login Page button
+        document.getElementById('login-page').addEventListener('click', function () {
+            window.location.href = 'index.html'; // Redirect to the login page
+        });
+
+        // Event listener for the Sign Up Page button
+        document.getElementById('signup-page').addEventListener('click', function () {
+            window.location.href = 'index.html#signup'; // Redirect to the sign-up section on the login page
+        });
+
+        // Event listener for the Dashboard Page button
+        document.getElementById('dashboard-page').addEventListener('click', function () {
+            window.location.href = 'index.html#dashboard'; // Redirect to the dashboard section on the login page
+        });
+
+        // Event listener for the Admin Panel button
+        document.getElementById('admin-page').addEventListener('click', function () {
+            const password = prompt('Enter admin password:');
+            if (password === '211892A') {
+                window.location.href = 'admin.html'; // Redirect to the admin panel
+            } else {
+                alert('Incorrect password!');
+            }
+        });
+    </script>
+</body>
+</html>
