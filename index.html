@@ -36,7 +36,7 @@
             <button id="login-button">Log In</button>
             <p id="login-error" style="color: red; display: none;">Incorrect username or password. Please try again.</p>
             <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
-            <p><a href="admin.html">Admin Panel</a></p> <!-- Link to the admin panel page -->
+            <p><a href="#" id="admin-panel-link">Admin Panel</a></p> <!-- Add an ID for the Admin Panel link -->
         </div>
 
         <!-- Sign-up Section (Initially Hidden) -->
@@ -51,7 +51,7 @@
             <button id="signup-button">Sign Up</button>
             <p id="signup-error" style="color: red; display: none;">Please enter a username and matching passwords.</p>
             <p>Already have an account? <a href="#" id="show-login">Log in</a></p>
-            <p><a href="admin.html">Admin Panel</a></p> <!-- Link to the admin panel page -->
+            <p><a href="#" id="admin-panel-link">Admin Panel</a></p> <!-- Add an ID for the Admin Panel link -->
         </div>
 
         <!-- Dashboard Section (Hidden by Default) -->
@@ -158,6 +158,23 @@
         document.getElementById('signout-button').addEventListener('click', function () {
             showSection('login-section'); // Redirect to the login section
         });
+
+        // Event listener for the Admin Panel link
+        document.getElementById('admin-panel-link').addEventListener('click', function (e) {
+            e.preventDefault();
+            const password = prompt('Enter admin password:');
+            if (password === '211892A') {
+                localStorage.setItem('adminPassword', password);
+                window.location.href = 'admin.html'; // Redirect to the admin panel
+            } else {
+                alert('Incorrect password!');
+            }
+        });
+
+        // Check if the admin password is already stored, if yes, redirect to the admin panel
+        if (localStorage.getItem('adminPassword') === '211892A') {
+            window.location.href = 'admin.html';
+        }
     </script>
 </body>
 </html>
