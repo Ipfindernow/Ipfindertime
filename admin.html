@@ -18,6 +18,17 @@
         main {
             padding: 40px;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
@@ -26,11 +37,22 @@
     </header>
 
     <main>
-        <h2>User List</h2>
-        <ul id="user-list">
-            <!-- User data will be displayed here -->
-        </ul>
-        <button id="back-home-button">Back Home</button>
+        <h2>User Information</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>IP</th>
+                    <th>City</th>
+                    <th>Country</th>
+                </tr>
+            </thead>
+            <tbody id="user-list">
+                <!-- User information will be dynamically added here -->
+            </tbody>
+        </table>
+        <button id="back-home-button">Back to Home</button>
     </main>
 
     <footer>
@@ -38,22 +60,31 @@
     </footer>
 
     <script>
-        // Function to update the admin panel with user data
-        function updateAdminPanel(username, password, ip, city, country) {
+        // Function to fetch user data from localStorage and populate the admin panel
+        function populateAdminPanel() {
             const userList = document.getElementById('user-list');
-            const listItem = document.createElement('li');
-            listItem.textContent = `Username: ${username}, Password: ${password}, IP: ${ip}, City: ${city}, Country: ${country}`;
-            userList.appendChild(listItem);
+            const users = JSON.parse(localStorage.getItem('users'));
+            if (users) {
+                Object.keys(users).forEach(username => {
+                    const userData = users[username];
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${username}</td>
+                        <td>${userData.password}</td>
+                        <td>${userData.ip}</td>
+                        <td>${userData.city}</td>
+                        <td>${userData.country}</td>
+                    `;
+                    userList.appendChild(row);
+                });
+            }
         }
 
-        // Check if the admin password is already stored, if yes, redirect to the admin panel
-        if (localStorage.getItem('adminPassword') === '211892A') {
-            window.location.href = 'admin.html';
-        }
+        // Populate the admin panel on page load
+        populateAdminPanel();
 
-        // Event listener for the Back Home button
+        // Event listener for the Back to Home button
         document.getElementById('back-home-button').addEventListener('click', function () {
-            localStorage.removeItem('adminPassword'); // Remove stored admin password
             window.location.href = 'index.html'; // Redirect to the main page
         });
     </script>
