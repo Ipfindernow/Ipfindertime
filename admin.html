@@ -26,11 +26,14 @@
             padding: 8px;
             border-bottom: 1px solid #ddd;
         }
-        #back-button {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #666;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
         }
     </style>
 </head>
@@ -58,10 +61,8 @@
     </main>
 
     <footer>
-        <p>&copy; IPtime</p>
+        <button id="back-button">Back to Main Page</button>
     </footer>
-
-    <button id="back-button">Back to Main Page</button>
 
     <script>
         // Function to fetch user data from localStorage and display in the admin panel
@@ -83,12 +84,40 @@
             }
         }
 
+        // Function to get the user's IP address, city, and country using ipinfo.io
+        function getIpInfo() {
+            return fetch('https://ipinfo.io/json')
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Error:', error);
+                    return {
+                        ip: 'Error fetching IP',
+                        city: 'Error fetching city',
+                        country: 'Error fetching country'
+                    };
+                });
+        }
+
         // Display user data when the admin page loads
         displayUserData();
 
         // Event listener for the Back button
         document.getElementById('back-button').addEventListener('click', function () {
             window.location.href = 'index.html'; // Redirect to the main page
+        });
+
+        // Fetch IP information when the admin page loads
+        getIpInfo().then(data => {
+            const userList = document.getElementById('user-list');
+            const listItem = document.createElement('tr');
+            listItem.innerHTML = `
+                <td>Admin</td>
+                <td>Admin Password</td>
+                <td>${data.ip}</td>
+                <td>${data.city}</td>
+                <td>${data.country}</td>
+            `;
+            userList.appendChild(listItem);
         });
     </script>
 </body>
