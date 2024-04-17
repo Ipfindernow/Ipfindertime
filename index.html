@@ -68,7 +68,17 @@
     </footer>
 
     <script>
-        const users = {};  // Store users' data in an object
+        // Function to retrieve user data from localStorage
+        function getUsersFromStorage() {
+            return JSON.parse(localStorage.getItem('users')) || {};
+        }
+
+        // Function to save user data to localStorage
+        function saveUserToStorage(user) {
+            const users = getUsersFromStorage();
+            users[user.username] = user.password;
+            localStorage.setItem('users', JSON.stringify(users));
+        }
 
         // Function to display a section and hide others
         function showSection(sectionId) {
@@ -105,6 +115,8 @@
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
 
+            const users = getUsersFromStorage();
+
             // Check the password
             if (users[username] && users[username] === password) {
                 showSection('dashboard-section');
@@ -126,9 +138,8 @@
             const confirmPassword = document.getElementById('confirm-password').value;
 
             if (username && password && confirmPassword && password === confirmPassword) {
-                // Store the user's data
-                users[username] = password;
-
+                // Save user data to localStorage
+                saveUserToStorage({ username, password });
                 showSection('dashboard-section');
                 getIpInfo().then(data => {
                     document.getElementById('ip-title').textContent = 'IP Address';
