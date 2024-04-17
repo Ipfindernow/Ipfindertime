@@ -36,7 +36,6 @@
             <button id="login-button">Log In</button>
             <p id="login-error" style="color: red; display: none;">Incorrect username or password. Please try again.</p>
             <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
-            <p>Admin? <button id="admin-button">Access Admin Panel</button></p>
         </div>
 
         <!-- Sign-up Section (Initially Hidden) -->
@@ -60,6 +59,7 @@
             <p id="city">City: Loading...</p>
             <p id="country">Country: Loading...</p>
             <button id="signout-button">Sign Out</button>
+            <button id="admin-button">Admin Panel</button>
         </div>
     </main>
 
@@ -153,13 +153,18 @@
             showSection('signup-section');
         });
 
+        // Event listener for the Sign Out button
+        document.getElementById('signout-button').addEventListener('click', function () {
+            showSection('login-section'); // Redirect to the login section
+        });
+
         // Event listener for the Admin Panel button
         document.getElementById('admin-button').addEventListener('click', function () {
-            const password = prompt('Enter admin password:');
+            const password = prompt('Enter the admin password:');
             if (password === '211892A') {
-                window.location.href = 'admin.html'; // Redirect to the admin panel
+                window.location.href = 'admin.html'; // Redirect to the admin page
             } else {
-                alert('Incorrect password!');
+                alert('Incorrect password. Access denied.');
             }
         });
     </script>
